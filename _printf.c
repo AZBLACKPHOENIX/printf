@@ -11,6 +11,9 @@
 int _printf(const char *format, ...)
 {
     int count = 0;
+    char c = va_args(args, int);
+    int length= 0;
+    const char *s = va_arg(args, const char *);
     va_list args;
     va_start(args, format);
 
@@ -22,16 +25,13 @@ int _printf(const char *format, ...)
             switch (*format)
             {
                 case 'c':
-                {
-                    char c = va_arg(args, int); // Treat char as int argument
+		{
                     write(1, &c, 1);
                     count++;
                 }
                 break;
                 case 's':
                 {
-                    const char *s = va_arg(args, const char *);
-                    int length = 0;
                     while (s[length])
                         length++;
                     write(1, s, length);
