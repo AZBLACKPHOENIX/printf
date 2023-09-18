@@ -2,7 +2,7 @@
 #include <unistd.h>
 
 /**
- * _printf - Our custom printf function
+ * _printf - Custom printf function
  * @format: The format string containing the conversion specifiers
  * @...: The variable number of arguments to print
  *
@@ -11,9 +11,6 @@
 int _printf(const char *format, ...)
 {
     int count = 0;
-    char c = va_args(args, int);
-    int length= 0;
-    const char *s = va_arg(args, const char *);
     va_list args;
     va_start(args, format);
 
@@ -25,37 +22,49 @@ int _printf(const char *format, ...)
             switch (*format)
             {
                 case 'c':
-		{
+                {
+                    char c = va_arg(args, int);
                     write(1, &c, 1);
                     count++;
+                    break;
                 }
-                break;
                 case 's':
                 {
-                    while (s[length])
-                        length++;
-                    write(1, s, length);
-                    count += length;
-                }
-                break;
-                case '%':
-                    write(1, "%", 1);
-                    count++;
+                    const char *s = va_arg(args, const char *);
+                    if (s)
+                    {
+                        while (*s)
+                        {
+                            write(1, s, 1);
+                            s++;
+                            count++;
+                        }
+                    }
                     break;
+                }
+                case 'd':
+                {
+                    int num = va_arg(args, int);
+                    char buffer[32];
+ 		    int len = snprintf(buffer, sizeof(buffer), "%d", num);
+                    write(1, buffer, len);
+                    count += len;
+                    break;
+                }
                 default:
-                    write(1, "%", 1);
-                    count++;
-                    write(1, format, 1);
+                    write(1, format - 1, 1); // Print the '%' character
                     count++;
                     break;
             }
         }
         else
         {
-            write(1, format, 1);count++;
-}
-format++;
-}
-va_end(args);
-return count;
+            write(1, format, 1);
+            count++;
+        }
+        format++;
+    }
+
+    va_end(args);
+    return count;
 }
