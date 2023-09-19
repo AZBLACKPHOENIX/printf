@@ -1,11 +1,12 @@
 #include <stdarg.h>
-#include <unistd.h>
+#include "main.h"
+
 /**
  * _printf - custom printf function
  * @format: format string
  * Return: number of characters printed
  */
-int _printf(const char* format, ...)
+int _printf(const char *format, ...)
 {
     int count = 0;
     va_list args;
@@ -21,35 +22,36 @@ int _printf(const char* format, ...)
                 case 'c':
                 {
                     char c = va_arg(args, int);
-                    write(1, &c, 1);
+                    _putchar(c);
                     count++;
                 }
                 break;
                 case 's':
                 {
                     const char *s = va_arg(args, const char *);
-                    int length = 0;
-                    while (s[length])
-                        length++;
-                    write(1, s, length);
-                    count += length;
+                    while (*s)
+                    {
+                        _putchar(*s);
+                        s++;
+                        count++;
+                    }
                 }
                 break;
                 case '%':
-                    write(1, "%", 1);
+                    _putchar('%');
                     count++;
                     break;
                 default:
-                    write(1, "%", 1);
+                    _putchar('%');
                     count++;
-                    write(1, format, 1);
+                    _putchar(*format);
                     count++;
                     break;
             }
         }
         else
         {
-            write(1, format, 1);
+            _putchar(*format);
             count++;
         }
         format++;
@@ -58,4 +60,3 @@ int _printf(const char* format, ...)
     va_end(args);
     return count;
 }
-
