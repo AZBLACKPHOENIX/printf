@@ -1,4 +1,5 @@
 #include <stdarg.h>
+#include <unistd.h>
 #include "main.h"
 
 /**
@@ -35,6 +36,12 @@ int _printf(const char *format, ...)
                         s++;
                         count++;
                     }
+                }
+                break;
+                case 'b':
+                {
+                    unsigned int n = va_arg(args, unsigned int);
+                    count += print_binary(n);
                 }
                 break;
                 case '%':
