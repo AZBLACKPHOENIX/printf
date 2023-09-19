@@ -1,16 +1,13 @@
-#include <stdarg.h>
-#include <unistd.h>
 #include "main.h"
+#include <stdio.h>
 
-/**
- * _printf - custom printf function
- * @format: format string
- * Return: number of characters printed
- */
 int _printf(const char *format, ...)
 {
-    int count = 0;
     va_list args;
+    int printed_chars = 0;
+int value = 0;
+	char *str;
+char c;
     va_start(args, format);
 
     while (*format)
@@ -18,52 +15,55 @@ int _printf(const char *format, ...)
         if (*format == '%')
         {
             format++;
-            switch (*format)
+            if (*format == '\0')
+                break;
+
+            if (*format == '%')
             {
-                case 'c':
+                putchar('%');
+                printed_chars++;
+            }
+            else if (*format == 'd' || *format == 'i')
+            {
+                value = va_arg(args, int);
+                printed_chars += printf("%d", value);
+            }
+            else if (*format == 's')
+            {
+                str = va_arg(args, char *);
+                if (str != NULL)
                 {
-                    char c = va_arg(args, int);
-                    _putchar(c);
-                    count++;
+                    printed_chars += printf("%s", str);
                 }
-                break;
-                case 's':
+                else
                 {
-                    const char *s = va_arg(args, const char *);
-                    while (*s)
-                    {
-                        _putchar(*s);
-                        s++;
-                        count++;
-                    }
+                    printed_chars += printf("(null)");
                 }
-                break;
-                case 'b':
-                {
-                    unsigned int n = va_arg(args, unsigned int);
-                    count += print_binary(n);
-                }
-                break;
-                case '%':
-                    _putchar('%');
-                    count++;
-                    break;
-                default:
-                    _putchar('%');
-                    count++;
-                    _putchar(*format);
-                    count++;
-                    break;
+            }
+            else if (*format == 'c')
+            {
+                c = va_arg(args, int);
+                putchar(c);
+                printed_chars++;
+            
+	    }
+            else
+            {
+                putchar('%');
+                printed_chars++;
+                putchar(*format);
+                printed_chars++;
             }
         }
         else
         {
-            _putchar(*format);
-            count++;
+            putchar(*format);
+            printed_chars++;
         }
+
         format++;
     }
 
     va_end(args);
-    return count;
+    return printed_chars;
 }
