@@ -1,69 +1,63 @@
-#include "main.h"
 #include <stdio.h>
+#include <stdarg.h>
 
-int _printf(const char *format, ...)
+int _printf(const char *format, ...) 
 {
     va_list args;
-    int printed_chars = 0;
-int value = 0;
-	char *str;
-char c;
-    va_start(args, format);
-
-    while (*format)
+    int count = 0;
+    char c;
+    char *str;
+    int num;
+    char *unknown;
+va_start(args, format);
+    while (*format != '\0') 
     {
-        if (*format == '%')
-        {
+        if (*format == '%') 
+	{
             format++;
-            if (*format == '\0')
-                break;
-
-            if (*format == '%')
-            {
-                putchar('%');
-                printed_chars++;
-            }
-            else if (*format == 'd' || *format == 'i')
-            {
-                value = va_arg(args, int);
-                printed_chars += printf("%d", value);
-            }
-            else if (*format == 's')
-            {
-                str = va_arg(args, char *);
-                if (str != NULL)
-                {
-                    printed_chars += printf("%s", str);
-                }
-                else
-                {
-                    printed_chars += printf("(null)");
-                }
-            }
-            else if (*format == 'c')
-            {
+            if (*format == 'c') 
+	    {
                 c = va_arg(args, int);
                 putchar(c);
-                printed_chars++;
-            
-	    }
-            else
-            {
-                putchar('%');
-                printed_chars++;
-                putchar(*format);
-                printed_chars++;
+                count++;
             }
-        }
-        else
-        {
+            else if (*format == 's') 
+	    {
+              str = va_arg(args, char*);
+                while (*str != '\0')
+		{
+                    putchar(*str);
+                    count++;
+                    str++;
+                }
+            }
+            else if (*format == 'd' || *format == 'i') 
+	    {
+               num = va_arg(args, int);
+                printf("%d", num);
+                count++;
+            }
+	      else if (*format == 'r')
+	      {
+                unknown = "Unknown";
+                while (*unknown != '\0') {
+                    putchar(*unknown);
+                    count++;
+                    unknown++;
+                }
+	      }
+            else if (*format == '%') 
+	    {
+                putchar('%');
+                count++;
+            }
+        } else 
+	{
             putchar(*format);
-            printed_chars++;
+            count++;
         }
-
         format++;
     }
-
     va_end(args);
-    return printed_chars;
+    return count;
 }
