@@ -39,6 +39,15 @@ int _printf(const char *format, ...)
                 case 'i':
                     printed_chars += _print_int(va_arg(args, int));
 break;
+ case 'o':
+                    printed_chars += _print_octal(va_arg(args, unsigned int));
+                    break;
+                case 'x':
+                    printed_chars += _print_hex(va_arg(args, unsigned int), 0);
+                    break;
+                case 'X':
+                    printed_chars += _print_hex(va_arg(args, unsigned int), 1);
+                    break;
                 default:
                     putchar('%');
                     putchar(*format);
@@ -98,3 +107,57 @@ int _print_int(int n)
 
     return (len);
 }
+
+int _print_octal(unsigned int n)
+{
+    int octal[100];
+    int i = 0;
+
+    if (n == 0)
+    {
+        putchar('0');
+        return (1);
+    }
+
+    while (n != 0)
+    {
+        octal[i] = n % 8;
+        n /= 8;
+        i++;
+    }
+
+    for (i = i - 1; i >= 0; i--)
+    {
+        putchar(octal[i] + '0');
+    }
+
+    return (i);
+}
+
+int _print_hex(unsigned int n, int uppercase)
+{
+    char hex[100];
+    int i = 0;
+    char *hex_chars = uppercase ? "0123456789ABCDEF" : "0123456789abcdef";
+
+    if (n == 0)
+    {
+        putchar('0');
+        return (1);
+    }
+
+    while (n != 0)
+    {
+        hex[i] = hex_chars[n % 16];
+        n /= 16;
+        i++;
+    }
+
+    for (i = i - 1; i >= 0; i--)
+    {
+        putchar(hex[i]);
+    }
+
+    return (i);
+}
+
