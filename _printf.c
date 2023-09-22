@@ -42,10 +42,12 @@ break;
  case 'o':
                     printed_chars += _print_octal(va_arg(args, unsigned int));
                     break;
-		    case 'b':
+	    case 'b':
     printed_chars += _print_binary(va_arg(args, unsigned int));
     break;
-
+    case 'u':
+    printed_chars += _print_unsigned(va_arg(args, unsigned int));
+    break;
                 case 'x':
                     printed_chars += _print_hex(va_arg(args, unsigned int), 0);
                     break;
@@ -112,6 +114,31 @@ int _print_int(int n)
     return (len);
 }
 
+int _print_unsigned(unsigned int n)
+{
+    unsigned int divisor = 1;
+    int len = 0;
+
+    if (n == 0)
+    {
+        putchar('0');
+        return (1);
+    }
+
+    while (n / divisor > 9)
+        divisor *= 10;
+
+    while (divisor != 0)
+    {
+        putchar((n / divisor) + '0');
+        n %= divisor;
+        divisor /= 10;
+        len++;
+    }
+
+    return (len);
+}
+
 int _print_octal(unsigned int n)
 {
     int octal[100];
@@ -135,7 +162,7 @@ int _print_octal(unsigned int n)
         putchar(octal[i] + '0');
     }
 
-    return (i);
+    return (i + 1);
 }
 
 int _print_hex(unsigned int n, int uppercase)
@@ -162,7 +189,7 @@ int _print_hex(unsigned int n, int uppercase)
         putchar(hex[i]);
     }
 
-    return (i);
+    return (i + 1);
 }
 
 int _print_binary(unsigned int n)
@@ -188,6 +215,6 @@ int _print_binary(unsigned int n)
         putchar(binary[i] + '0');
     }
 
-    return (i);
+    return (i + 1);
 }
 
