@@ -42,6 +42,10 @@ break;
  case 'o':
                     printed_chars += _print_octal(va_arg(args, unsigned int));
                     break;
+		    case 'b':
+    printed_chars += _print_binary(va_arg(args, unsigned int));
+    break;
+
                 case 'x':
                     printed_chars += _print_hex(va_arg(args, unsigned int), 0);
                     break;
@@ -156,6 +160,32 @@ int _print_hex(unsigned int n, int uppercase)
     for (i = i - 1; i >= 0; i--)
     {
         putchar(hex[i]);
+    }
+
+    return (i);
+}
+
+int _print_binary(unsigned int n)
+{
+    int binary[100];
+    int i = 0;
+
+    if (n == 0)
+    {
+        putchar('0');
+        return (1);
+    }
+
+    while (n != 0)
+    {
+        binary[i] = n % 2;
+        n /= 2;
+        i++;
+    }
+
+    for (i = i - 1; i >= 0; i--)
+    {
+        putchar(binary[i] + '0');
     }
 
     return (i);
